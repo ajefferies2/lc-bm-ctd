@@ -46,4 +46,5 @@ A modular, cost-effective CTD (Conductivity, Temperature, Depth) sensor node des
 | DFRobot Gravity EC (I²C)   | ~$70     |
 | Wiring, housing, connectors| ~$10–15  |
 | **Total (per unit)**       | **~$150–160** |
+
 **NOTE: electronics only estimate**
