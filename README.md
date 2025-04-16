@@ -1,55 +1,49 @@
-# OpenCTD Bristlemouth-Compatible Sensor Node
+# OpenCTD-like Bristlemouth-Compatible Sensor Node
 
-A low-cost, modular CTD sensor system that transmits conductivity, temperature, and depth data over a Bristlemouth-style CAN bus. Designed for scalable deployments using commodity components and standard digital protocols.
+A modular, cost-effective CTD (Conductivity, Temperature, Depth) sensor node designed to transmit real-time data over a Bristlemouth-style CAN bus. This system is intended for scalable academic deployments using I2C-only digital sensors and STM32 microcontrollers. It avoids legacy analog and 1-Wire protocols for simplicity and future compatibility with lab-grade sensors. 
+
+# NOTE: This project will NOT be plug and play with bristlemouth infrastructure unless we use their hardware dev kit (unavailible) or other 2-wire power/data soln.
 
 ## Goals
 
-- Replace microSD logging with real-time CAN transmission
-- Use only I²C sensors for simplicity and modularity
-- Maintain low cost and ease of assembly
-- Compatible with Bristlemouth networks (TX-only)
+- Replace microSD logging with real-time CAN / "bristlemouth lite" broadcast
+- Use only I2C sensors for reduced wiring and modularity
+- Maintain low cost while ensuring reliability
+- Design for compatibility with Bristlemouth bus architecture (TX-only)
+- Future-proof for lab-grade sensor drop-in replacements and additional sensors
 
 ## System Overview
 
 ### Microcontroller
 - STM32F103C8T6 ("Blue Pill")
-- ST-Link V2 for programming
-- SN65HVD230 CAN transceiver
+- ST-Link V2 for flashing/debugging
+- SN65HVD230 CAN transceiver (standard CAN 2.0B)
 
-### Sensors (I²C only)
-| Measurement   | Sensor                      | Cost    |
-|--------------|-----------------------------|---------|
-| Pressure + Temp | MS5803-14BA Clone          | ~$12    |
-| Conductivity | DFRobot Gravity EC (I²C)     | ~$45    |
+### Sensors (I2C only) (similar suite to OpenCTD)
+| Measurement    | Sensor                        | Brand      | Cost    |
+|----------------|-------------------------------|------------|---------|
+| Pressure + Temp| MS5803-14BA                   | SparkFun   | ~$64    |
+| Conductivity   | Gravity EC Sensor (I²C V2)    | DFRobot    | ~$70    |
+
+# NOTE: We can add separate Temp, pH, and any other sensors that are I2C compatible fairly easily.
 
 ### CAN Protocol
-- Fixed CAN ID: TBD
-- Payload (6 bytes):
-  - Temp (°C × 100): 2 bytes
-  - Pressure (mbar × 10): 2 bytes
-  - Conductivity (mS/cm × 100): 2 bytes
-- Broadcast every 1 second
+- Fixed CAN ID: TBD 
+- 6-byte payload structure:
+  - Temperature (°C × 100)     → 2 bytes
+  - Pressure (mbar × 10)       → 2 bytes
+  - Conductivity (mS/cm × 100) → 2 bytes
+- Transmit at 1 Hz (TBD??)
 
-## Hardware Cost Estimate 
+## Hardware Cost Estimate
 
-| Component              | Cost    | Purchase Links |
-|------------------------|---------|----------------|
-| STM32 Blue Pill        | $3–4    | [AliExpress](https://www.aliexpress.us/item/3256806599889958.html) · [Amazon](https://www.amazon.com/dp/B0B2LJFM8T) |
-| ST-Link V2             | $3–5    | [AliExpress](https://www.aliexpress.us/item/3256804147336972.html) · [Amazon](https://www.amazon.com/dp/B082F3DFHB) |
-| SN65HVD230 Transceiver | $1–2    | [AliExpress](https://www.aliexpress.us/item/3256804719351429.html) · [Amazon](https://www.amazon.com/dp/B085HDZK3F) |
-
-| MS5803 Sensor          | ~$12    |
-| DFRobot EC Sensor (I²C)| ~$45    |
-| Misc. wiring + housing | ~$10–15 |
-| **Total (per unit)**   | ~$75    |
-
-## ToDo 
-
-- [ ] Set up STM32 with CAN TX
-- [ ] Add MS5803 pressure sensor support
-- [ ] Add DFRobot EC I²C support
-- [ ] Format and transmit CAN payload
-- [ ] Waterproof and test in field
-
-## Directory Structure (planned)
-
+| Component                  | Cost     |
+|----------------------------|----------|
+| STM32 Blue Pill            | $3–4     |
+| ST-Link V2 Programmer      | $3–5     |
+| SN65HVD230 CAN Transceiver | $1–2     |
+| MS5803-14BA (SparkFun)     | ~$64     |
+| DFRobot Gravity EC (I²C)   | ~$70     |
+| Wiring, housing, connectors| ~$10–15  |
+| **Total (per unit)**       | **~$150–160** |
+# note: electronics only estimate
